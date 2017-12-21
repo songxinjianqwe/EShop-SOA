@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans  
+        http://www.springframework.org/schema/beans/spring-beans.xsd  
+        http://code.alibabatech.com/schema/dubbo  
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd  
+        ">
+    
+    <bean id="orderService "
+          class="cn.sinjinsong.eshop.service.order.impl.OrderServiceImpl"/>
+    <!-- 消费者应用信息，用于提供依赖关系 -->
+    <dubbo:application name="order_provider"/>
+    <!-- 注册地址，用于消费者寻找服务 -->
+    <dubbo:registry protocol="zookeeper" address="192.168.1.118:2181,192.168.1.119:2181,192.168.1.120:2181"/>
+    <dubbo:protocol name="dubbo" port="20881" serialization="java"/>
+    <dubbo:service interface="cn.sinjinsong.eshop.service.order.OrderService" version="1.0.0"
+                   ref="orderService"/>
+</beans>

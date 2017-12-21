@@ -10,3 +10,7 @@
 订单子系统：order,涉及order表
 
 邮件子系统
+
+## 约定
+公共的domain、exception、enumeration都放在common模块下
+一般情况下api模块只放service接口

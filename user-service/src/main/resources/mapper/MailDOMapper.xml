@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.sinjinsong.eshop.dao.mail.MailDOMapper">
+
+    <resultMap id="BaseResultMap" type="cn.sinjinsong.eshop.common.domain.entity.mail.MailDO">
+        <id column="id" property="id"></id>
+        <result column="mail_status" property="mailStatus"
+                javaType="cn.sinjinsong.eshop.core.enumeration.mail.MailStatus"></result>
+        <association property="sender" column="sender"
+                     select="cn.sinjinsong.eshop.dao.user.UserDOMapper.findBriefInfoById"></association>
+        <association property="receiver" column="receiver"
+                     select="cn.sinjinsong.eshop.dao.user.UserDOMapper.findBriefInfoById"></association>
+        <association property="text" column="text"
+                     select="cn.sinjinsong.eshop.dao.mail.MailTextDOMapper.selectByPrimaryKey"></association>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, sender ,receiver , mail_status,text
+    </sql>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from mail
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from mail
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <insert id="insert" parameterType="cn.sinjinsong.eshop.common.domain.entity.mail.MailDO">
+    insert into mail (id, sender, receiver,
+    mail_status, text)
+    values (#{id,jdbcType=BIGINT}, #{sender.id,jdbcType=BIGINT}, #{receiver.id,jdbcType=BIGINT},
+    #{mailStatus,jdbcType=SMALLINT}, #{text.id,jdbcType=BIGINT})
+    </insert>
+
+    <insert id="insertBatch">
+        insert into mail (id, sender, receiver,mail_status, text)
+        values
+        <foreach collection="mails" item="mail" separator=",">
+            (#{mail.id}, #{mail.sender.id},#{mail.receiver.id},#{mail.mailStatus},#{mail.text.id})
+        </foreach>
+    </insert>
+
+    <select id="findByReceiver" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from mail
+        where receiver = #{receiver}
+        <if test="mailStatus.toString != 'ALL'">
+            and
+            mail_status=#{mailStatus.code}
+        </if>
+    </select>
+
+    <select id="findBySender" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from mail
+        where sender = #{sender}
+    </select>
+
+    <update id="updateStatus">
+        update mail
+        set mail_status = #{mailStatus}
+        where id in
+        <foreach collection="ids" open="(" close=")" item="item_id" separator=",">
+            #{item_id}
+        </foreach>
+    </update>
+    
+    <select id="findCountBySender" resultType="int">
+        select count(*)
+        from mail
+        where sender = #{sender}
+    </select>
+    
+    <select id="findCountByReceiver" resultType="int">
+        select count(*)
+        from mail
+        where receiver = #{receiver}
+        <if test="mailStatus.toString != 'ALL'">
+            and
+            mail_status=#{mailStatus.code}
+        </if>
+    </select>
+</mapper>

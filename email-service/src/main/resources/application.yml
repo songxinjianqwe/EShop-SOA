@@ -1,0 +1,42 @@
+# mysql
+spring:
+  # 环境 dev|test|pro
+  profiles:
+      active: dev
+  output:
+    ansi:
+      enabled: detect #配置输出console的ide中的配色
+  # jackson时间格式化
+  jackson:
+      time-zone: GMT+8
+  #    default-property-inclusion: non_null    #忽略null字段
+  #邮箱
+  mail:
+    host: smtp.163.com
+    port: 25
+    username: songxinjianzx@163.com
+    password: 201529sxj
+    default-encoding: utf-8
+    properties: 
+      mail:
+        smtp:
+          auth: true
+          timeout: 25000
+  #国际化        
+  messages:
+    basename: i18n/messages
+    cache-seconds: -1
+    encoding: UTF-8
+    fallback-to-system-locale: true
+  # THYMELEAF (ThymeleafAutoConfiguration)
+  thymeleaf: 
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: HTML5
+    encoding: UTF-8
+    content-type: text/html # ;charset=<encoding> is added
+    cache: false
+  aop:
+    auto: true
+    # 使用JDK代理，只有这样才能用Spring AOP拦截Mapper接口实现类 
+    proxy-target-class: false 

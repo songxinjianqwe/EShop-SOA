@@ -1,0 +1,32 @@
+spring:
+  # 环境 dev|test|pro
+  profiles:
+      active: dev
+  output:
+    ansi:
+      enabled: detect #配置输出console的ide中的配色
+  # jackson时间格式化
+  jackson:
+      time-zone: GMT+8
+  #    default-property-inclusion: non_null    #忽略null字段
+  #国际化        
+  messages:
+    basename: i18n/messages
+    cache-seconds: -1
+    encoding: UTF-8
+    fallback-to-system-locale: true
+  aop:
+    auto: true
+    # 使用JDK代理，只有这样才能用Spring AOP拦截Mapper接口实现类 
+    proxy-target-class: false 
+## Mybatis配置
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  config-location: classpath:mybatis-config.xml
+# Mybatis PageHelper
+pagehelper:
+  reasonable: true
+  page-size-zero: true
+  support-methods-arguments: true
+  auto-runtime-dialect: true
+

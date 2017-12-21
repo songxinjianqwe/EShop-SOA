@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+    <settings>
+        <!--日志-->
+        <setting name="logPrefix" value="dao."/>
+        <!--缓存 -->
+        <setting name="cacheEnabled" value="false"/>
+        <!--延迟加载-->
+        <setting name="lazyLoadingEnabled" value="false"/>
+        <!--侵入延迟加载， 当启用时,有延迟加载属性的对象在被调用时将会完全加载任意属性。否则,每种属性将会按需要加载。-->
+        <setting name="aggressiveLazyLoading" value="false"/>
+        <setting name="localCacheScope" value="STATEMENT"/>
+        <setting name="multipleResultSetsEnabled" value="true"/>
+        <!-- select name as title from user 用于识别别名, -->
+        <setting name="useColumnLabel" value="true"/>
+        <setting name="defaultStatementTimeout" value="25000"/>
+        <!-- 开启驼峰命名转换，如：table中(create_time)->entity(createTime)这样在sql语句中就不需要使用as来显式的去定义别名 -->
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+        <!-- 是否使用插入数据后自增主键的值，需要配合keyProperty使用 -->
+        <setting name="useGeneratedKeys" value="true"/>
+        <!-- 指定日志输出器 -->
+        <setting name="logImpl" value="LOG4J"/>
+    </settings>
+    
+    <typeHandlers>
+        <typeHandler handler="cn.sinjinsong.skeleton.converter.UserStatusTypeHandler"
+                     javaType="cn.sinjinsong.skeleton.enumeration.UserStatus"></typeHandler>
+    </typeHandlers>
+
+</configuration>

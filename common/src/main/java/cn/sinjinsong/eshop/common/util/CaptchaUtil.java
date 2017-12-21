@@ -1,7 +1,7 @@
 package cn.sinjinsong.eshop.common.util;
 
 
-import cn.sinjinsong.eshop.common.domain.CaptchaDTO;
+import cn.sinjinsong.eshop.common.base.domain.CaptchaDTO;
 import org.apache.commons.codec.binary.Base64;
 
 import javax.imageio.ImageIO;

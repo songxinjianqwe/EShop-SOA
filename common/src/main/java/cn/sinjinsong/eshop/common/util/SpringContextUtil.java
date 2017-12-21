@@ -52,5 +52,4 @@ public final class SpringContextUtil implements ApplicationContextAware {
         }
         return getBean(sb.toString());
     }
-
 }
