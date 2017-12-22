@@ -67,7 +67,7 @@ public class UserController {
      * @return
      */
     @RequestMapping(value = "/query/{key}", method = RequestMethod.GET)
-    @PostAuthorize("(hasRole('ADMIN') and not returnObject.roles.contains(new cn.sinjinsong.eshop.core.domain.entity.user.RoleDO(1,'ROLE_ADMIN'))) or (returnObject.username ==  principal.username)")
+    @PostAuthorize("(hasRole('ADMIN') and not returnObject.roles.contains(new cn.sinjinsong.eshop.common.domain.entity.user.RoleDO(1,'ROLE_ADMIN'))) or (returnObject.username ==  principal.username)")
     @ApiOperation(value = "按某属性查询用户", notes = "属性可以是id或username或email或手机号", response = UserDO.class, authorizations = {@Authorization("登录权限")})
     @ApiResponses(value = {
             @ApiResponse(code = 401, message = "未登录"),

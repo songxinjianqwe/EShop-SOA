@@ -61,6 +61,12 @@ public class ProductServiceImpl implements ProductService {
     public List<ProductDO> findSimpleProductByCategory(Long categoryId) {
         return productDOMapper.findSimpleByCategory(categoryId);
     }
+    
+    @Transactional(readOnly = true)
+    @Override
+    public List<Long> findProductIdsByCategory(Long categoryId){
+        return productDOMapper.findProductIdsByCategory(categoryId);
+    }
 
     @Transactional(readOnly = true)
     @Override

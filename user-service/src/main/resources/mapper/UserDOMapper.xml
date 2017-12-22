@@ -16,7 +16,7 @@
         <result column="birthday" property="birthday"/>
         <result column="reg_time" property="regTime"/>
         <result column="avatar" property="avatar"/>
-        <collection property="roles" column="id" select="cn.sinjinsong.eshop.common.dao.user.RoleDOMapper.findByUserId"/>
+        <collection property="roles" column="id" select="cn.sinjinsong.eshop.dao.user.RoleDOMapper.findByUserId"/>
     </resultMap>
 
     <resultMap id="BriefResultMap" type="cn.sinjinsong.eshop.common.domain.entity.user.UserDO">

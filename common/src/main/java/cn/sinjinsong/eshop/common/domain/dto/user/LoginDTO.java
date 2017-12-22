@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 /**
  * Created by SinjinSong on 2017/4/27.
@@ -14,7 +15,7 @@ import javax.validation.constraints.NotNull;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginDTO {
+public class LoginDTO implements Serializable{
     private String username;
     private String phone;
     private String email;

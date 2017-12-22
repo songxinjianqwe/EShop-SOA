@@ -8,7 +8,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Created by SinjinSong on 2017/10/6.
@@ -17,9 +19,10 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class OrderQueryConditionDTO {
+public class OrderQueryConditionDTO implements Serializable{
     private Long userId;
     private Long categoryId;
+    private List<Long> productIds;
     @JsonFormat(pattern = DateTimeProperties.LOCAL_DATE_TIME_PATTERN)
     private LocalDateTime begin;
     @JsonFormat(pattern = DateTimeProperties.LOCAL_DATE_TIME_PATTERN)

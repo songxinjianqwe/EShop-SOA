@@ -49,8 +49,6 @@ public interface ProductDOMapper {
      */
     int updateByPrimaryKeySelective(ProductDO record);
 
-   
-
     Page<ProductDO> findByCategoryPaging(@Param("categoryId") Long category, @Param("pageNum") Integer pageNum, @Param("pageSize") Integer pageSize);
 
     List<ProductDO> findByCategory(@Param("categoryId") Long category);
@@ -58,4 +56,6 @@ public interface ProductDOMapper {
     List<ProductDO> findOnPromotion();
 
     List<ProductDO> findSimpleByCategory(@Param("categoryId") Long category);
+
+    List<Long> findProductIdsByCategory(@Param("categoryId")Long category);
 }

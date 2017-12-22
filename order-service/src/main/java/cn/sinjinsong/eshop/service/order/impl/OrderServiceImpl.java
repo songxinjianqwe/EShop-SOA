@@ -6,6 +6,8 @@ import cn.sinjinsong.eshop.common.enumeration.order.OrderStatus;
 import cn.sinjinsong.eshop.dao.order.OrderDOMapper;
 import cn.sinjinsong.eshop.properties.OrderProperties;
 import cn.sinjinsong.eshop.service.order.OrderService;
+import cn.sinjinsong.eshop.service.product.ProductService;
+import cn.sinjinsong.eshop.service.user.UserService;
 import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,36 +20,62 @@ import java.time.LocalDateTime;
 /**
  * Created by SinjinSong on 2017/10/6.
  */
-@Service
+@Service("orderService")
 @Slf4j
 public class OrderServiceImpl implements OrderService {
     @Autowired
     private OrderDOMapper mapper;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private ProductService productService;
+
+    /**
+     * 将原来Mapper中的association转为现在的populateBean
+     * @param orderDO
+     */
+    private void populateBean(OrderDO orderDO) {
+        orderDO.setProduct(productService.findProductById(orderDO.getProduct().getId()));
+        orderDO.setUser(userService.findById(orderDO.getUser().getId()));
+    }
 
     @Transactional
     @Override
-    public void placeOrder(OrderDO order) {
+    public OrderDO placeOrder(OrderDO order) {
         mapper.insert(order);
+        return order;
     }
 
     @Transactional(readOnly = true)
     @Override
     public PageInfo<OrderDO> findAll(Integer pageNum, Integer pageSize) {
-        return mapper.findAll(pageNum, pageSize).toPageInfo();
+        PageInfo<OrderDO> page = mapper.findAll(pageNum, pageSize).toPageInfo();
+        page.getList().forEach(
+                order -> populateBean(order)
+        );
+        return page;
+
     }
 
     @Transactional(readOnly = true)
     @Override
     public PageInfo<OrderDO> findAllByCondition(OrderQueryConditionDTO queryDTO, Integer pageNum, Integer pageSize) {
-        return mapper.findByCondition(queryDTO, pageNum, pageSize).toPageInfo();
+        if(queryDTO.getCategoryId() != null){
+            queryDTO.setProductIds(productService.findProductIdsByCategory(queryDTO.getCategoryId()));
+        }
+        PageInfo<OrderDO> page = mapper.findByCondition(queryDTO, pageNum, pageSize).toPageInfo();
+        page.getList().forEach(order -> populateBean(order));
+        return page;
     }
 
     @Transactional(readOnly = true)
     @Override
     public OrderDO findById(Long orderId) {
-        return mapper.selectByPrimaryKey(orderId);
+        OrderDO orderDO = mapper.selectByPrimaryKey(orderId);
+        populateBean(orderDO);
+        return orderDO;
     }
-
+    
     @Transactional
     @Override
     public void updateOrder(OrderDO order) {

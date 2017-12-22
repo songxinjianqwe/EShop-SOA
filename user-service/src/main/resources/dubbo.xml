@@ -9,6 +9,16 @@
         ">
     <bean id="userService"
           class="cn.sinjinsong.eshop.service.user.impl.UserServiceImpl"/>
+    <bean id="mailService"
+          class="cn.sinjinsong.eshop.service.mail.impl.MailServiceImpl"/>
+    <bean id="newsService"
+          class="cn.sinjinsong.eshop.service.news.impl.NewsServiceImpl"/>
+    <bean id="payService"
+          class="cn.sinjinsong.eshop.service.pay.impl.PayServiceImpl"/>
+    <bean id="productService"
+          class="cn.sinjinsong.eshop.service.product.impl.ProductServiceImpl"/>
+
+
     <!-- 提供方应用信息，用于计算依赖关系 -->
     <dubbo:application name="user_provider"/>
     <!-- 使用zookeeper注册中心暴露服务地址 -->
@@ -18,4 +28,16 @@
     <!-- 声明需要暴露的服务接口 -->
     <dubbo:service interface="cn.sinjinsong.eshop.service.user.UserService" version="1.0.0"
                    ref="userService"/>
+    <dubbo:service interface="cn.sinjinsong.eshop.service.mail.MailService" version="1.0.0"
+                   ref="mailService"/>
+    <dubbo:service interface="cn.sinjinsong.eshop.service.news.NewsService" version="1.0.0"
+                   ref="newsService"/>
+    <dubbo:service interface="cn.sinjinsong.eshop.service.pay.PayService" version="1.0.0"
+                   ref="payService"/>
+    <dubbo:service interface="cn.sinjinsong.eshop.service.product.ProductService" version="1.0.0"
+                   ref="productService"/>
+    
+    <dubbo:reference id="orderService" interface="cn.sinjinsong.eshop.service.order.OrderService"
+                     version="1.0.0" check="false"/>
+
 </beans>

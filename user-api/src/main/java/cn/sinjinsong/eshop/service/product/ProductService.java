@@ -20,8 +20,11 @@ public interface ProductService {
     List<ProductDO> findProductsOnPromotion();
 
     PageInfo<ProductDO> findProductByCategory(Long categoryId, Integer pageNum, Integer pageSize);
-    
+
     List<ProductDO> findSimpleProductByCategory(Long categoryId);
+
+    List<Long> findProductIdsByCategory(Long categoryId);
+     
     ProductDO findProductById(Long productId);
 
     void saveProduct(ProductDO product);

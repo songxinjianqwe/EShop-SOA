@@ -14,3 +14,9 @@
 ## 约定
 公共的domain、exception、enumeration都放在common模块下
 一般情况下api模块只放service接口
+
+## 启动顺序
+email，user，order，web
+
+## 注意事项
+所有实体类都要实现serializable接口

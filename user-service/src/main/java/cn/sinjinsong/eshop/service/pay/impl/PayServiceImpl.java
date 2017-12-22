@@ -9,6 +9,7 @@ import cn.sinjinsong.eshop.common.exception.pay.PaymentPasswordInCorrectExceptio
 import cn.sinjinsong.eshop.dao.pay.BalanceDOMapper;
 import cn.sinjinsong.eshop.service.order.OrderService;
 import cn.sinjinsong.eshop.service.pay.PayService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
  * Created by SinjinSong on 2017/10/7.
  */
 @Service
+@Slf4j
 public class PayServiceImpl implements PayService {
     @Autowired
     private BalanceDOMapper balanceDOMapper;
@@ -34,9 +36,18 @@ public class PayServiceImpl implements PayService {
         balanceDOMapper.updateByPrimaryKeySelective(balanceDO);
     }
 
+    /**
+     * 这里会涉及分布式事务
+     * 本地事务是更新用户的余额表
+     * 远程事务是更新订单的状态
+     *
+     * @param order
+     * @param paymentPassword
+     */
     @Transactional
     @Override
     public void pay(OrderDO order, String paymentPassword) {
+        log.info("order:{}",order);
         if (order.getOrderStatus() != OrderStatus.UNPAID) {
             throw new OrderStateIllegalException(order.getOrderStatus().toString());
         }
@@ -47,6 +58,10 @@ public class PayServiceImpl implements PayService {
         if (order.getTotalPrice().compareTo(balanceDO.getBalance()) > 0) {
             throw new BalanceNotEnoughException(String.valueOf(balanceDO.getBalance()));
         }
+        log.info("paymentPassword:{}", paymentPassword);
+        log.info("passwordEncoder.encode(\"admin\"):{}", passwordEncoder.encode("admin"));
+        log.info(" balanceDO.getPaymentPassword():{}", balanceDO.getPaymentPassword());
+        log.info("match?:{}",passwordEncoder.matches(paymentPassword, balanceDO.getPaymentPassword()));
         if (!passwordEncoder.matches(paymentPassword, balanceDO.getPaymentPassword())) {
             throw new PaymentPasswordInCorrectException(order.getUser().getUsername());
         }
@@ -56,7 +71,7 @@ public class PayServiceImpl implements PayService {
         order.setOrderStatus(OrderStatus.PAID);
         orderService.updateOrder(order);
     }
-    
+
     @Transactional
     @Override
     public void setPaymentPassword(Long userId, String oldPaymentPassword, String newPaymentPassword) {

@@ -8,7 +8,7 @@
         <result property="isOnBoard" column="is_on_board"></result>
         <result property="imageUrl" column="image_url"></result>
         <collection property="products" column="id"
-                    select="cn.sinjinsong.eshop.core.dao.product.ProductDOMapper.findSimpleByCategory"></collection>
+                    select="cn.sinjinsong.eshop.dao.product.ProductDOMapper.findSimpleByCategory"></collection>
     </resultMap>
 
     <resultMap id="SimpleResultMap" type="cn.sinjinsong.eshop.common.domain.entity.product.ProductCategoryDO">

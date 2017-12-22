@@ -9,7 +9,7 @@ import com.github.pagehelper.PageInfo;
  * Created by SinjinSong on 2017/10/6.
  */
 public interface OrderService {
-    void placeOrder(OrderDO order);
+    OrderDO placeOrder(OrderDO order);
 
     PageInfo<OrderDO> findAll(Integer pageNum, Integer pageSize);
 

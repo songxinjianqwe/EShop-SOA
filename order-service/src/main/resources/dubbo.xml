@@ -7,7 +7,7 @@
         http://code.alibabatech.com/schema/dubbo  
         http://code.alibabatech.com/schema/dubbo/dubbo.xsd  
         ">
-    
+
     <bean id="orderService "
           class="cn.sinjinsong.eshop.service.order.impl.OrderServiceImpl"/>
     <!-- 消费者应用信息，用于提供依赖关系 -->
@@ -15,6 +15,11 @@
     <!-- 注册地址，用于消费者寻找服务 -->
     <dubbo:registry protocol="zookeeper" address="192.168.1.118:2181,192.168.1.119:2181,192.168.1.120:2181"/>
     <dubbo:protocol name="dubbo" port="20881" serialization="java"/>
+    <!--公开的-->
     <dubbo:service interface="cn.sinjinsong.eshop.service.order.OrderService" version="1.0.0"
                    ref="orderService"/>
+    
+    <!--引用的，因为有循环依赖，所以关闭开启时检查-->
+    <dubbo:reference id="userService" interface="cn.sinjinsong.eshop.service.user.UserService" version="1.0.0" />
+    <dubbo:reference id="productService" interface="cn.sinjinsong.eshop.service.product.ProductService" version="1.0.0"/>
 </beans>

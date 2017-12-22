@@ -27,8 +27,11 @@
     </settings>
     
     <typeHandlers>
-        <typeHandler handler="cn.sinjinsong.skeleton.converter.UserStatusTypeHandler"
-                     javaType="cn.sinjinsong.skeleton.enumeration.UserStatus"></typeHandler>
+        <typeHandler handler="cn.sinjinsong.eshop.common.enumeration.conversion.UserStatusTypeHandler"
+                     javaType="cn.sinjinsong.eshop.common.enumeration.user.UserStatus"></typeHandler>
+        <typeHandler handler="cn.sinjinsong.eshop.common.enumeration.conversion.MailStatusTypeHandler"
+                     javaType="cn.sinjinsong.eshop.common.enumeration.mail.MailStatus"></typeHandler>
+        <typeHandler handler="cn.sinjinsong.eshop.common.enumeration.conversion.ProductTypeTypeHandler"
+                     javaType="cn.sinjinsong.eshop.common.enumeration.product.ProductType"></typeHandler>
     </typeHandlers>
-
 </configuration>

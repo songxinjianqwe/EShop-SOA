@@ -60,8 +60,7 @@ public class OrderController {
         }
         order.setPlaceTime(LocalDateTime.now());
         order.setOrderStatus(OrderStatus.UNPAID);
-        orderService.placeOrder(order);
-        return order;
+        return orderService.placeOrder(order);
     }
 
     @RequestMapping(method = RequestMethod.GET)

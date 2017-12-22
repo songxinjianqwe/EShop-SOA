@@ -16,5 +16,9 @@
     <dubbo:reference id="userService" interface="cn.sinjinsong.eshop.service.user.UserService" version="1.0.0"/>
     <dubbo:reference id="mailService" interface="cn.sinjinsong.eshop.service.mail.MailService" version="1.0.0"/>
     <dubbo:reference id="emailService" interface="cn.sinjinsong.eshop.service.email.EmailService" version="1.0.0"/>
+    <dubbo:reference id="newsService" interface="cn.sinjinsong.eshop.service.news.NewsService" version="1.0.0"/>
+    <dubbo:reference id="orderService" interface="cn.sinjinsong.eshop.service.order.OrderService" version="1.0.0"/>
+    <dubbo:reference id="payService" interface="cn.sinjinsong.eshop.service.pay.PayService" version="1.0.0"/>
+    <dubbo:reference id="productService" interface="cn.sinjinsong.eshop.service.product.ProductService" version="1.0.0"/>
     
 </beans>
