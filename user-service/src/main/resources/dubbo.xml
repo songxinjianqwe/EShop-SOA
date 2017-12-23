@@ -14,10 +14,11 @@
     <bean id="newsService"
           class="cn.sinjinsong.eshop.service.news.impl.NewsServiceImpl"/>
     <bean id="payService"
-          class="cn.sinjinsong.eshop.service.pay.impl.PayServiceImpl"/>
+          class="cn.sinjinsong.eshop.service.pay.impl.AccountServiceImpl"/>
     <bean id="productService"
           class="cn.sinjinsong.eshop.service.product.impl.ProductServiceImpl"/>
-
+    <bean id="accountService"
+          class="cn.sinjinsong.eshop.service.pay.impl.AccountServiceImpl"/>
 
     <!-- 提供方应用信息，用于计算依赖关系 -->
     <dubbo:application name="user_provider"/>
@@ -36,8 +37,13 @@
                    ref="payService"/>
     <dubbo:service interface="cn.sinjinsong.eshop.service.product.ProductService" version="1.0.0"
                    ref="productService"/>
-    
+    <dubbo:service interface="cn.sinjinsong.eshop.service.pay.AccountService" version="1.0.0"
+                   ref="accountService" group="org.bytesoft.bytetcc"
+                   filter="compensable" loadbalance="compensable" cluster="failfast" retries="0"/>
+
     <dubbo:reference id="orderService" interface="cn.sinjinsong.eshop.service.order.OrderService"
+                     version="1.0.0" check="false"/>
+    <dubbo:reference id="enterpriseService" interface="cn.sinjinsong.eshop.service.order.EnterpriseService"
                      version="1.0.0" check="false"/>
 
 </beans>

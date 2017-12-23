@@ -11,8 +11,8 @@
         </commentGenerator>
         
         <!--jdbc的数据库连接 -->
-        <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://localhost:3306/eshop?characterEncoding=utf8" userId="root"
-                        password="130119">
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://192.168.1.123:3306/eshop_order?characterEncoding=utf8" userId="root"
+                        password="Sxj19961226.">
         </jdbcConnection>
         
         <javaTypeResolver>
@@ -20,7 +20,7 @@
         </javaTypeResolver>
 
         <!-- 生成的POJO类所在的目录-->
-        <javaModelGenerator targetPackage="cn.sinjinsong.eshop.core.domain.entity" targetProject="src/main/java">
+        <javaModelGenerator targetPackage="cn.sinjinsong.eshop.common.domain.entity" targetProject="src/main/java">
             <!-- 是否对model添加 构造函数 -->
             <property name="constructorBased" value="false"/>
             <!-- 是否允许子包，即targetPackage.schemaName.tableName -->
@@ -36,15 +36,15 @@
         </sqlMapGenerator>
         
         <!--Mapper接口生成所在的目录-->
-        <javaClientGenerator targetPackage="cn.sinjinsong.eshop.core.dao" targetProject="src/main/java" type="XMLMAPPER">
+        <javaClientGenerator targetPackage="cn.sinjinsong.eshop.dao" targetProject="src/main/java" type="XMLMAPPER">
             <property name="enableSubPackages" value="true"/>
             <property name="methodNameCalculator" value="default"/>
             <property name="rootInterface" value=""/>
         </javaClientGenerator>
 
       
-        <table tableName="product_category"
-               domainObjectName="ProductCategoryDO"
+        <table tableName="enterprise"
+               domainObjectName="EnterpriseDO"
                enableCountByExample="false"
                enableUpdateByExample="false"
                enableDeleteByExample="false"

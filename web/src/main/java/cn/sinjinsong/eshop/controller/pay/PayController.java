@@ -8,6 +8,7 @@ import cn.sinjinsong.eshop.common.exception.pay.DepositException;
 import cn.sinjinsong.eshop.common.exception.user.AccessDeniedException;
 import cn.sinjinsong.eshop.security.domain.JWTUser;
 import cn.sinjinsong.eshop.service.order.OrderService;
+import cn.sinjinsong.eshop.service.pay.LocalAccountService;
 import cn.sinjinsong.eshop.service.pay.PayService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -32,7 +33,9 @@ public class PayController {
     private PayService payService;
     @Autowired
     private OrderService orderService;
-
+    @Autowired
+    private LocalAccountService accountService;
+    
     @RequestMapping(value = "/users/{userId}/deposit", method = RequestMethod.POST)
     @ApiOperation(value = "充值", authorizations = {@Authorization("登录")})
     public void deposit(@PathVariable("userId") @ApiParam(value = "用户id", required = true) Long userId, @RequestParam("amount") @ApiParam(value = "充值金额", required = true) Integer amount) {
@@ -42,6 +45,12 @@ public class PayController {
         payService.deposit(userId, amount);
     }
 
+    /**
+     * 调用远程TCC事务方法，需要在当前类加@Compensable
+     * @param orderId
+     * @param paymentPassword
+     * @param user
+     */
     @RequestMapping(value = "/pay/{orderId}", method = RequestMethod.POST)
     @ApiOperation(value = "订单付款", authorizations = {@Authorization("登录")})
     public void pay(@PathVariable("orderId") @ApiParam(value = "订单id", required = true) Long orderId, @RequestParam("payment_password") String paymentPassword, @AuthenticationPrincipal JWTUser user) {
@@ -52,7 +61,8 @@ public class PayController {
         if (!user.getId().equals(order.getUser().getId())) {
             throw new AccessDeniedException(user.getUsername());
         }
-        payService.pay(order, paymentPassword);
+        // 调用远程TCC事务
+        accountService.pay(order, paymentPassword);
     }
 
     @RequestMapping(value = "/users/{userId}/payment_password", method = RequestMethod.POST)

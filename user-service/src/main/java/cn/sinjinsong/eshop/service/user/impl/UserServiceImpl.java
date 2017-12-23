@@ -29,7 +29,8 @@ public class UserServiceImpl implements UserService {
     private RoleDOMapper roleDOMapper;
     @Autowired
     private BalanceDOMapper balanceDOMapper;
-    private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder ;
    
 
     @Override
@@ -57,7 +58,6 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @CacheEvict(value = "UserDO", allEntries = true)
     public void save(UserDO userDO) {
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         //对密码进行加密
         userDO.setPassword(passwordEncoder.encode(userDO.getPassword()));
         userDO.setRegTime(LocalDateTime.now());
@@ -69,7 +69,7 @@ public class UserServiceImpl implements UserService {
         roleDOMapper.insertUserRole(userDO.getId(), roleId);
 
         //在Balance表中添加用户
-        balanceDOMapper.insert(new BalanceDO(userDO, 0D, null));
+        balanceDOMapper.insert(new BalanceDO(userDO, 0D, null,0L));
     }
 
     @Override

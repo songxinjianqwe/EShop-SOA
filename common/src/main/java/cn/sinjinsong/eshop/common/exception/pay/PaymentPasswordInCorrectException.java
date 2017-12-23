@@ -9,9 +9,9 @@ import org.springframework.http.HttpStatus;
  * Created by SinjinSong on 2017/10/14.
  */
 @RestResponseStatus(value= HttpStatus.FORBIDDEN,code=2)
-@RestField("username")
+@RestField("userId")
 public class PaymentPasswordInCorrectException extends BaseRestException {
-    public PaymentPasswordInCorrectException(String username){
-        super(username);
+    public PaymentPasswordInCorrectException(Long userId){
+        super(userId);
     }
 }

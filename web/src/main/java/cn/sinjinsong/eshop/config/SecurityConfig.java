@@ -14,7 +14,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -26,28 +25,25 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private JWTAuthenticationEntryPoint unauthorizedHandler;
     private UserDetailsService userDetailsService;
     private AccessDeniedHandler accessDeniedHandler;
-
+    private PasswordEncoder passwordEncoder;
     @Autowired
     public SecurityConfig(JWTAuthenticationEntryPoint unauthorizedHandler,
                           UserDetailsService userDetailsService,
-                          AccessDeniedHandler accessDeniedHandler) {
+                          AccessDeniedHandler accessDeniedHandler,
+                          PasswordEncoder passwordEncoder) {
         this.unauthorizedHandler = unauthorizedHandler;
         this.userDetailsService = userDetailsService;
         this.accessDeniedHandler = accessDeniedHandler;
-
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Autowired
     public void configureAuthentication(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
         authenticationManagerBuilder
                 .userDetailsService(this.userDetailsService)
-                .passwordEncoder(passwordEncoder());
+                .passwordEncoder(this.passwordEncoder);
     }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 
     @Bean
     public JWTAuthenticationTokenFilter authenticationTokenFilterBean() throws Exception {

@@ -9,6 +9,7 @@
         ">
     <!-- 消费者应用信息，用于提供依赖关系 -->
     <dubbo:application name="web_consumer"/>
+    <dubbo:protocol name="dubbo" port="20883" serialization="java"/>
     <!-- 注册地址，用于消费者寻找服务 -->
     <dubbo:registry protocol="zookeeper" address="192.168.1.118:2181,192.168.1.119:2181,192.168.1.120:2181"/>
     <dubbo:consumer timeout="5000"/>
@@ -20,5 +21,7 @@
     <dubbo:reference id="orderService" interface="cn.sinjinsong.eshop.service.order.OrderService" version="1.0.0"/>
     <dubbo:reference id="payService" interface="cn.sinjinsong.eshop.service.pay.PayService" version="1.0.0"/>
     <dubbo:reference id="productService" interface="cn.sinjinsong.eshop.service.product.ProductService" version="1.0.0"/>
+    <dubbo:reference id="accountService" interface="cn.sinjinsong.eshop.service.pay.AccountService" version="1.0.0"
+		filter="compensable" group="org.bytesoft.bytetcc" loadbalance="compensable" cluster="failfast" retries="0" />
     
 </beans>
