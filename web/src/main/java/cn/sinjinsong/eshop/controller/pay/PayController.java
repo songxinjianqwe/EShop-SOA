@@ -53,7 +53,7 @@ public class PayController {
      */
     @RequestMapping(value = "/pay/{orderId}", method = RequestMethod.POST)
     @ApiOperation(value = "订单付款", authorizations = {@Authorization("登录")})
-    public void pay(@PathVariable("orderId") @ApiParam(value = "订单id", required = true) Long orderId, @RequestParam("payment_password") String paymentPassword, @AuthenticationPrincipal JWTUser user) {
+    public void pay(@PathVariable("orderId") @ApiParam(value = "订单id", required = true) Long orderId, @RequestBody String paymentPassword, @AuthenticationPrincipal JWTUser user) {
         OrderDO order = orderService.findById(orderId);
         if (order == null) {
             throw new OrderNotFoundException(String.valueOf(orderId));
@@ -61,7 +61,7 @@ public class PayController {
         if (!user.getId().equals(order.getUser().getId())) {
             throw new AccessDeniedException(user.getUsername());
         }
-        // 调用远程TCC事务
+        // 调用本地TCC事务
         accountService.pay(order, paymentPassword);
     }
 

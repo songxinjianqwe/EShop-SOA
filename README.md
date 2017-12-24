@@ -113,6 +113,11 @@ cancel:
 3. 如果订单状态是paying，则将订单状态设置为pay_failure，执行账户余额的回增，version++(where中检查version)
 如果没有执行更新，则表示有请求已经回增过余额了，则不再次回增。
 
+tcc型service可被远程consumer当做普通service调用, 此时：
+1、全局事务发起方为provider，即consumer不传播事务上下文.
+2、若consumer参与事务（无论是普通事务还是tcc事务），则其与provider端事务属于两个独立的事务，一致性无法保证. 
+注意：除非consumer不参与事务（无论是普通事务还是tcc事务），否则应该调用tcc型远程service，而不是远程service 
+
 
 #### 本地事务的解决方式
 ```

@@ -25,7 +25,6 @@ import java.util.Map;
  */
 @Configuration
 @Slf4j
-//@MapperScan("cn.sinjinsong.skeleton.dao")
 public class MyBatisConfig {
 
     @Value("${datasource.type:}")

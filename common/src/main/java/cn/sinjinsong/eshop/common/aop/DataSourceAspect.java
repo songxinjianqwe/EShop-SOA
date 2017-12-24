@@ -1,9 +1,11 @@
 package cn.sinjinsong.eshop.common.aop;
 
+import cn.sinjinsong.eshop.common.condition.DBCondition;
 import cn.sinjinsong.eshop.common.config.db.DataSourceContextHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Aspect
 @Order(1)
 @Configuration
+@Conditional(DBCondition.class)
 @Slf4j
 public class DataSourceAspect {
     

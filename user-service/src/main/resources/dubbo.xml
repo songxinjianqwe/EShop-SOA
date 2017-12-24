@@ -14,7 +14,7 @@
     <bean id="newsService"
           class="cn.sinjinsong.eshop.service.news.impl.NewsServiceImpl"/>
     <bean id="payService"
-          class="cn.sinjinsong.eshop.service.pay.impl.AccountServiceImpl"/>
+          class="cn.sinjinsong.eshop.service.pay.impl.PayServiceImpl"/>
     <bean id="productService"
           class="cn.sinjinsong.eshop.service.product.impl.ProductServiceImpl"/>
     <bean id="accountService"
