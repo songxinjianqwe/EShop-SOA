@@ -37,7 +37,4 @@ public interface BalanceDOMapper {
      * @mbggenerated
      */
     int updateByPrimaryKeySelective(BalanceDO record);
-    
-
-    int updateBalanceMVCC(BalanceDO record);
 }

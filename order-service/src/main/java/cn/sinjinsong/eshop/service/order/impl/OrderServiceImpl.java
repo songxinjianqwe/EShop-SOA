@@ -1,10 +1,13 @@
 package cn.sinjinsong.eshop.service.order.impl;
 
 import cn.sinjinsong.eshop.common.domain.dto.order.OrderQueryConditionDTO;
+import cn.sinjinsong.eshop.common.domain.entity.order.EnterpriseDO;
 import cn.sinjinsong.eshop.common.domain.entity.order.OrderDO;
 import cn.sinjinsong.eshop.common.enumeration.order.OrderStatus;
+import cn.sinjinsong.eshop.common.properties.DbResult;
 import cn.sinjinsong.eshop.dao.order.OrderDOMapper;
 import cn.sinjinsong.eshop.properties.OrderProperties;
+import cn.sinjinsong.eshop.service.order.EnterpriseService;
 import cn.sinjinsong.eshop.service.order.OrderService;
 import cn.sinjinsong.eshop.service.product.ProductService;
 import cn.sinjinsong.eshop.service.user.UserService;
@@ -12,7 +15,6 @@ import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
@@ -30,12 +32,15 @@ public class OrderServiceImpl implements OrderService {
     private UserService userService;
     @Autowired
     private ProductService productService;
+    @Autowired
+    private EnterpriseService enterpriseService;
 
     /**
      * 将原来Mapper中的association转为现在的populateBean
+     *
      * @param order
      */
-    private void populateBean(OrderDO order){
+    private void populateBean(OrderDO order) {
         order.setUser(userService.findById(order.getUser().getId()));
         order.setProduct(productService.findProductById(order.getProduct().getId()));
     }
@@ -61,7 +66,7 @@ public class OrderServiceImpl implements OrderService {
     @Transactional(readOnly = true)
     @Override
     public PageInfo<OrderDO> findAllByCondition(OrderQueryConditionDTO queryDTO, Integer pageNum, Integer pageSize) {
-        if(queryDTO.getCategoryId() != null){
+        if (queryDTO.getCategoryId() != null) {
             queryDTO.setProductIds(productService.findProductIdsByCategory(queryDTO.getCategoryId()));
         }
         PageInfo<OrderDO> page = mapper.findByCondition(queryDTO, pageNum, pageSize).toPageInfo();
@@ -76,8 +81,27 @@ public class OrderServiceImpl implements OrderService {
         populateBean(orderDO);
         return orderDO;
     }
-    
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+
+    /**
+     * 支付业务的远程事务
+     * @param order
+     */
+    @Transactional
+    @Override
+    public void finishOrder(OrderDO order) {
+        // 更新订单状态
+        order.setOrderStatus(OrderStatus.PAID);
+        this.updateOrder(order);
+        // 向企业用户转行
+        EnterpriseDO enterpriseDO = enterpriseService.find();
+        enterpriseDO.setBalance(enterpriseDO.getBalance() + order.getTotalPrice());
+        int result = enterpriseService.updateEnterpriseMVCC(enterpriseDO);
+        if (result == DbResult.FAILURE) {
+            log.info("{} 订单confirm出现并发，MVCC更新失败", order.getId());
+        }
+    }
+
+    @Transactional
     @Override
     public void updateOrder(OrderDO order) {
         mapper.updateByPrimaryKeySelective(order);

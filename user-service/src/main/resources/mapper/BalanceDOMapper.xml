@@ -8,7 +8,6 @@
         -->
         <result column="balance" property="balance"></result>
         <result column="payment_password" property="paymentPassword"></result>
-        <result column="version" property="version"></result>
         <association property="user" column="user"
                      select="cn.sinjinsong.eshop.dao.user.UserDOMapper.selectByPrimaryKey"></association>
     </resultMap>
@@ -61,14 +60,5 @@
             </if>
         </set>
         where user = #{user.id,jdbcType=BIGINT}
-    </update>
-
-
-    <update id="updateBalanceMVCC">
-        update balance
-        set
-            balance = #{balance,jdbcType=DOUBLE},
-            version = #{version} + 1
-        where user = #{user.id,jdbcType=BIGINT} and version = #{version}
     </update>
 </mapper>

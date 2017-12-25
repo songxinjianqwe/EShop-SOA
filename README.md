@@ -147,6 +147,8 @@ public void pay(OrderDO order, String paymentPassword) {
     balanceDOMapper.updateByPrimaryKeySelective(balanceDO);
 }
 ```
+#### 异步确保型（可靠消息最终一致）
+由于远程事务的消息可能会重试，需要在业务上实现幂等。
 
 
 

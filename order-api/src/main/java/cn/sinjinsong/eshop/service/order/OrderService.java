@@ -17,4 +17,5 @@ public interface OrderService {
     OrderDO findById(Long orderId);
     void updateOrder(OrderDO order);
     void updateTimeOutOrders();
+    void finishOrder(OrderDO order);
 }

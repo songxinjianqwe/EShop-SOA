@@ -36,5 +36,4 @@ public interface EnterpriseDOMapper {
      * @mbggenerated
      */
     int updateByPrimaryKeySelective(EnterpriseDO record);
-    int updateEnterpriseMVCC(EnterpriseDO record);
 }

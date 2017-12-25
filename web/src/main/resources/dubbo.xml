@@ -21,7 +21,5 @@
     <dubbo:reference id="orderService" interface="cn.sinjinsong.eshop.service.order.OrderService" version="1.0.0"/>
     <dubbo:reference id="payService" interface="cn.sinjinsong.eshop.service.pay.PayService" version="1.0.0"/>
     <dubbo:reference id="productService" interface="cn.sinjinsong.eshop.service.product.ProductService" version="1.0.0"/>
-    <dubbo:reference id="accountService" interface="cn.sinjinsong.eshop.service.pay.AccountService" version="1.0.0"
-		filter="compensable" group="org.bytesoft.bytetcc" loadbalance="compensable" cluster="failfast" retries="0" />
-    
+    <dubbo:reference id="accountService" interface="cn.sinjinsong.eshop.service.pay.AccountService" version="1.0.0"/>
 </beans>

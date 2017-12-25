@@ -1,6 +1,7 @@
 package cn.sinjinsong.eshop.service.pay.impl;
 
 import cn.sinjinsong.eshop.common.domain.entity.pay.BalanceDO;
+import cn.sinjinsong.eshop.common.exception.pay.BalanceNotEnoughException;
 import cn.sinjinsong.eshop.common.exception.pay.PaymentPasswordInCorrectException;
 import cn.sinjinsong.eshop.dao.pay.BalanceDOMapper;
 import cn.sinjinsong.eshop.service.pay.PayService;
@@ -30,7 +31,6 @@ public class PayServiceImpl implements PayService {
         balanceDOMapper.updateByPrimaryKeySelective(balanceDO);
     }
 
-
     @Transactional
     @Override
     public void setPaymentPassword(Long userId, String oldPaymentPassword, String newPaymentPassword) {
@@ -39,6 +39,26 @@ public class PayServiceImpl implements PayService {
             throw new PaymentPasswordInCorrectException(balanceDO.getUser().getId());
         }
         balanceDO.setPaymentPassword(passwordEncoder.encode(newPaymentPassword));
+        balanceDOMapper.updateByPrimaryKeySelective(balanceDO);
+    }
+    
+    @Transactional
+    @Override
+    public void decreaseAccount(Long userId, Double totalPrice, String paymentPassword) {
+        BalanceDO balanceDO = balanceDOMapper.selectByPrimaryKey(userId);
+        if (balanceDO == null) {
+            throw new BalanceNotEnoughException("0");
+        }
+        if (totalPrice.compareTo(balanceDO.getBalance()) > 0) {
+            log.info("{} 用户余额不足", userId);
+            throw new BalanceNotEnoughException(String.valueOf(balanceDO.getBalance()));
+        }
+        if (!passwordEncoder.matches(paymentPassword, balanceDO.getPaymentPassword())) {
+            log.info("{} 用户支付密码错误", userId);
+            throw new PaymentPasswordInCorrectException(userId);
+        }
+        balanceDO.setBalance(balanceDO.getBalance() - totalPrice);
+        // 本地事务
         balanceDOMapper.updateByPrimaryKeySelective(balanceDO);
     }
 }

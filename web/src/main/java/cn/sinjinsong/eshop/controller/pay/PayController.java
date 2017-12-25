@@ -8,7 +8,7 @@ import cn.sinjinsong.eshop.common.exception.pay.DepositException;
 import cn.sinjinsong.eshop.common.exception.user.AccessDeniedException;
 import cn.sinjinsong.eshop.security.domain.JWTUser;
 import cn.sinjinsong.eshop.service.order.OrderService;
-import cn.sinjinsong.eshop.service.pay.LocalAccountService;
+import cn.sinjinsong.eshop.service.pay.AccountService;
 import cn.sinjinsong.eshop.service.pay.PayService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -34,7 +34,7 @@ public class PayController {
     @Autowired
     private OrderService orderService;
     @Autowired
-    private LocalAccountService accountService;
+    private AccountService accountService;
     
     @RequestMapping(value = "/users/{userId}/deposit", method = RequestMethod.POST)
     @ApiOperation(value = "充值", authorizations = {@Authorization("登录")})
@@ -61,7 +61,6 @@ public class PayController {
         if (!user.getId().equals(order.getUser().getId())) {
             throw new AccessDeniedException(user.getUsername());
         }
-        // 调用本地TCC事务
         accountService.pay(order, paymentPassword);
     }
 

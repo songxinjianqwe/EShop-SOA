@@ -1,4 +1,4 @@
-package cn.sinjinsong.eshop.config;
+package cn.sinjinsong.eshop.mq.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

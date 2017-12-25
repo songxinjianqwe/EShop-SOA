@@ -90,12 +90,4 @@
         set balance = #{balance,jdbcType=DOUBLE}
         where id = #{id,jdbcType=BIGINT}
     </update>
-    
-    <update id="updateEnterpriseMVCC">
-        update enterprise
-        set
-            balance = #{balance,jdbcType=DOUBLE},
-            version = #{version} + 1
-        where id = #{id,jdbcType=BIGINT} and version = #{version}
-    </update>
 </mapper>

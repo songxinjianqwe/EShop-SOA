@@ -1,4 +1,4 @@
-package cn.sinjinsong.eshop.config;
+package cn.sinjinsong.eshop.mq.config;
 
 import cn.sinjinsong.eshop.security.endpoint.JWTAuthenticationEntryPoint;
 import cn.sinjinsong.eshop.security.filter.JWTAuthenticationTokenFilter;

@@ -1,7 +1,6 @@
 package cn.sinjinsong.eshop.common.domain.entity.pay;
 
 import cn.sinjinsong.eshop.common.domain.entity.user.UserDO;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,6 +29,4 @@ public class BalanceDO implements Serializable{
      */
     private Double balance;
     private String paymentPassword;
-    @JsonIgnore
-    private Long version;
 }
