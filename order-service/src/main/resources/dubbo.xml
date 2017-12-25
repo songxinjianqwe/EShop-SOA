@@ -25,7 +25,7 @@
     
     
     
-    <!--引用的，因为有循环依赖，所以关闭开启时检查-->
+    引用的，因为有循环依赖，所以关闭开启时检查
     <dubbo:reference id="userService" interface="cn.sinjinsong.eshop.service.user.UserService" version="1.0.0" />
     <dubbo:reference id="productService" interface="cn.sinjinsong.eshop.service.product.ProductService" version="1.0.0"/>
 </beans>

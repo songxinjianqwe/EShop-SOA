@@ -33,11 +33,11 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * 将原来Mapper中的association转为现在的populateBean
-     * @param orderDO
+     * @param order
      */
-    private void populateBean(OrderDO orderDO) {
-        orderDO.setProduct(productService.findProductById(orderDO.getProduct().getId()));
-        orderDO.setUser(userService.findById(orderDO.getUser().getId()));
+    private void populateBean(OrderDO order){
+        order.setUser(userService.findById(order.getUser().getId()));
+        order.setProduct(productService.findProductById(order.getProduct().getId()));
     }
 
     @Transactional
