@@ -25,7 +25,7 @@
         <!-- 指定日志输出器 -->
         <setting name="logImpl" value="LOG4J"/>
     </settings>
-    
+
     <typeHandlers>
         <typeHandler handler="cn.sinjinsong.eshop.common.enumeration.conversion.UserStatusTypeHandler"
                      javaType="cn.sinjinsong.eshop.common.enumeration.user.UserStatus"></typeHandler>
@@ -33,5 +33,7 @@
                      javaType="cn.sinjinsong.eshop.common.enumeration.mail.MailStatus"></typeHandler>
         <typeHandler handler="cn.sinjinsong.eshop.common.enumeration.conversion.ProductTypeTypeHandler"
                      javaType="cn.sinjinsong.eshop.common.enumeration.product.ProductType"></typeHandler>
+        <typeHandler handler="cn.sinjinsong.eshop.common.enumeration.conversion.MessageStatusTypeHandler"
+                     javaType="cn.sinjinsong.eshop.common.enumeration.message.MessageStatus"></typeHandler>
     </typeHandlers>
 </configuration>

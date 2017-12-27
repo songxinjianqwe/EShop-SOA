@@ -1,6 +1,6 @@
 package cn.sinjinsong.eshop.service.email.impl;
 
-import cn.sinjinsong.eshop.common.exception.email.EmailTemplateNotFoundException;
+import cn.sinjinsong.eshop.exception.email.EmailTemplateNotFoundException;
 import cn.sinjinsong.eshop.properties.EmailSubjectProperties;
 import cn.sinjinsong.eshop.service.email.EmailService;
 import lombok.Getter;

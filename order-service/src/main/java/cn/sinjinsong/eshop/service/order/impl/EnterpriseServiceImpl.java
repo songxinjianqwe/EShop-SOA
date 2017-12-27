@@ -21,7 +21,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     }
 
     @Override
-    public int updateEnterpriseMVCC(EnterpriseDO enterpriseDO) {
+    public int update(EnterpriseDO enterpriseDO) {
         return mapper.updateByPrimaryKeySelective(enterpriseDO);
     }
 }

@@ -8,5 +8,5 @@ import cn.sinjinsong.eshop.common.domain.entity.order.EnterpriseDO;
  */
 public interface EnterpriseService {
     EnterpriseDO find();
-    int updateEnterpriseMVCC(EnterpriseDO enterpriseDO);
+    int update(EnterpriseDO enterpriseDO);
 }

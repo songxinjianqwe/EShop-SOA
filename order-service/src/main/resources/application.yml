@@ -18,7 +18,7 @@ spring:
   aop:
     auto: true
     # 使用JDK代理，只有这样才能用Spring AOP拦截Mapper接口实现类 
-    proxy-target-class: false 
+    proxy-target-class: true 
 ## Mybatis配置
 mybatis:
   mapper-locations: classpath:mapper/*.xml

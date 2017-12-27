@@ -16,6 +16,8 @@
         <module>order-api</module>
         <module>order-service</module>
         <module>web</module>
+        <module>message-console</module>
+        <module>common-web</module>
     </modules>
     <packaging>pom</packaging>
 

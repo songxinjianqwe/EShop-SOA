@@ -12,17 +12,23 @@
 邮件子系统
 
 ## 约定
-公共的domain、exception、enumeration都放在common模块下
-一般情况下api模块只放service接口
+公共的domain、enumeration都放在common模块下
+一般情况下api模块放service接口和exception异常
+注意自己模块的异常放在自己模块的api模块下（Dubbo异常机制）
+i18n资源文件放在common下即可，别的模块下不用放
+
 
 ## 启动顺序
-email，user，order，web
+email，order，user，web
 
 ## 注意事项
 所有实体类都要实现serializable接口
+Dubbo异常处理机制：
+异常类和接口类在同一jar包里，直接抛出
+，否则被调方service中抛出的异常，在调用方中会被包一层RuntimeException，无法获得原来的异常
 
-
-## TCC
+## TCC 解决订单支付问题
+### 概述
 Try: 尝试执行业务
 
 完成所有业务检查（一致性）
@@ -69,8 +75,7 @@ Cancel操作满足幂等性（因为可能会多次执行）
 这种操作显然就不是幂等的。
 
 
-### 支付订单
-#### TCC
+### 业务逻辑
 try: 账户余额扣减，订单状态设置paying
 confirm：订单状态设置为paid，收款方余额增加
 cancel：账户余额回增，订单状态设置为pay_failed
@@ -93,62 +98,25 @@ cancel：账户余额回增，订单状态设置为pay_failed
 在账户表中设置一个version。
 
 
-#### 重新表述为
+### 流程
 
 try：
-1. 读取账户表的version
-2. 读取订单状态
-3. 如果订单状态为unpaid，则将订单状态设置为paying，执行账户余额扣减(可能会抛出异常此时会执行cancel)，version++(where中检查version不变)；
-如果没有执行更新，则表示有请求已经扣减过账户余额了，则不再次扣减。
+1. 读取订单状态
+2. 如果订单状态为unpaid，则将订单状态设置为paying，执行账户余额扣减(可能会抛出异常此时会执行cancel)
+
 
 confirm: 
-1. 读取收款方余额表的version
-2. 读取订单状态
-3. 如果订单是paying，则将订单状态设置为paid，执行收款方余额表的增加，version++(where中检查version)；
-如果没有执行更新，则表示有请求已经增加过余额了，则不再次增加。
+1. 读取订单状态
+2. 如果订单是paying，则将订单状态设置为paid，执行收款方余额表的增加
 
 cancel:
-1. 读取账户表的version
-2. 读取订单状态
-3. 如果订单状态是paying，则将订单状态设置为pay_failure，执行账户余额的回增，version++(where中检查version)
-如果没有执行更新，则表示有请求已经回增过余额了，则不再次回增。
+1. 读取订单状态
+2. 如果订单状态是paying，则将订单状态设置为pay_failure，执行账户余额的回增
 
-tcc型service可被远程consumer当做普通service调用, 此时：
-1、全局事务发起方为provider，即consumer不传播事务上下文.
-2、若consumer参与事务（无论是普通事务还是tcc事务），则其与provider端事务属于两个独立的事务，一致性无法保证. 
-注意：除非consumer不参与事务（无论是普通事务还是tcc事务），否则应该调用tcc型远程service，而不是远程service 
+## 异步确保型（可靠消息最终一致）解决订单支付问题
+由于远程事务的消息可能会重试，需要在业务上实现幂等（已经处理过的记录下来，遇到新的请求时 检查是否已经处理过）。
 
 
-#### 本地事务的解决方式
-```
-@Transactional
-@Override
-public void pay(OrderDO order, String paymentPassword) {
-    log.info("order:{}",order);
-    if (order.getOrderStatus() != OrderStatus.UNPAID) {
-        throw new OrderStateIllegalException(order.getOrderStatus().toString());
-    }
-    order.setOrderStatus(OrderStatus.PAID);
-    orderService.updateOrder(order);
-    
-    // 此时如果账户出现问题，那么会抛出异常，之前对订单状态的设置会被回滚
-    // 但是分布式环境下，即使下面抛出异常，之前对订单状态的设置也不会被回滚（远程事务）
-    BalanceDO balanceDO = balanceDOMapper.selectByPrimaryKey(order.getUser().getId());
-    if (balanceDO == null) {
-        throw new BalanceNotEnoughException("0");
-    }
-    if (order.getTotalPrice().compareTo(balanceDO.getBalance()) > 0) {
-        throw new BalanceNotEnoughException(String.valueOf(balanceDO.getBalance()));
-    }
-    if (!passwordEncoder.matches(paymentPassword, balanceDO.getPaymentPassword())) {
-        throw new PaymentPasswordInCorrectException(order.getUser().getUsername());
-    }
-    balanceDO.setBalance(balanceDO.getBalance() - order.getTotalPrice());
-    balanceDOMapper.updateByPrimaryKeySelective(balanceDO);
-}
-```
-#### 异步确保型（可靠消息最终一致）
-由于远程事务的消息可能会重试，需要在业务上实现幂等。
 
 
 

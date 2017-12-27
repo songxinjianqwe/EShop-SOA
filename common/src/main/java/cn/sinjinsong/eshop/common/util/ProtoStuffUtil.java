@@ -12,6 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Created by SinjinSong on 2017/5/22.
  */
 public class ProtoStuffUtil {
+    private ProtoStuffUtil(){}
     private static Map<Class<?>, Schema<?>> cachedSchema = new ConcurrentHashMap<>();
     
     @SuppressWarnings("all")

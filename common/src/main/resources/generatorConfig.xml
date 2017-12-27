@@ -43,8 +43,8 @@
         </javaClientGenerator>
 
       
-        <table tableName="enterprise"
-               domainObjectName="EnterpriseDO"
+        <table tableName="consumer_transaction_message"
+               domainObjectName="ConsumerTransactionMessageDO"
                enableCountByExample="false"
                enableUpdateByExample="false"
                enableDeleteByExample="false"

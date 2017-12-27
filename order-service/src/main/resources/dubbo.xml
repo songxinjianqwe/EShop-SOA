@@ -10,8 +10,9 @@
 
     <bean id="orderService "
           class="cn.sinjinsong.eshop.service.order.impl.OrderServiceImpl"/>
-    <bean id="enterpriseService"
-          class="cn.sinjinsong.eshop.service.order.impl.EnterpriseServiceImpl"/>
+    <bean id="consumerTransactionMessageService "
+          class="cn.sinjinsong.eshop.service.message.impl.ConsumerTransactionMessageServiceImpl"/>
+    
     <!-- 消费者应用信息，用于提供依赖关系 -->
     <dubbo:application name="order_provider"/>
     <!-- 注册地址，用于消费者寻找服务 -->
@@ -20,8 +21,10 @@
     <!--公开的-->
     <dubbo:service interface="cn.sinjinsong.eshop.service.order.OrderService" version="1.0.0"
                    ref="orderService"/>
+    <dubbo:service interface="cn.sinjinsong.eshop.service.message.ConsumerTransactionMessageService" version="1.0.0"
+                   ref="consumerTransactionMessageService"/>
     
     <!--引用的，因为有循环依赖，所以关闭开启时检查-->
-    <dubbo:reference id="userService" interface="cn.sinjinsong.eshop.service.user.UserService" version="1.0.0" />
-    <dubbo:reference id="productService" interface="cn.sinjinsong.eshop.service.product.ProductService" version="1.0.0"/>
+    <dubbo:reference id="userService" interface="cn.sinjinsong.eshop.service.user.UserService" version="1.0.0" check="false"/>
+    <dubbo:reference id="productService" interface="cn.sinjinsong.eshop.service.product.ProductService" version="1.0.0" check="false"/>
 </beans>

@@ -4,7 +4,7 @@ import cn.sinjinsong.eshop.common.domain.entity.mail.MailDO;
 import cn.sinjinsong.eshop.common.domain.entity.mail.MailTextDO;
 import cn.sinjinsong.eshop.common.domain.entity.user.UserDO;
 import cn.sinjinsong.eshop.common.enumeration.mail.MailStatus;
-import cn.sinjinsong.eshop.common.exception.mail.MailReceiverNotFoundException;
+import cn.sinjinsong.eshop.exception.mail.MailReceiverNotFoundException;
 import cn.sinjinsong.eshop.dao.mail.MailDOMapper;
 import cn.sinjinsong.eshop.dao.mail.MailTextDOMapper;
 import cn.sinjinsong.eshop.dao.user.UserDOMapper;

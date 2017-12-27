@@ -29,10 +29,10 @@ public class LoggingAspect {
         log.info("The method [ {} ] ends with Result: {}", joinPoint.getSignature(), result);
     }
 
-    @AfterThrowing(value = "declareJoinPointExpression()", throwing = "e")
-    public void doAfterThrowing(JoinPoint joinPoint, Exception e) {
-        log.error("Error happened in method: [ {} ]", joinPoint.getSignature());
-        log.error("Parameters: {}", Arrays.toString(joinPoint.getArgs()));
-        log.error("Exception StackTrace: {}", e);
-    }
+//    @AfterThrowing(value = "declareJoinPointExpression()", throwing = "e")
+//    public void doAfterThrowing(JoinPoint joinPoint, Exception e) {
+//        log.error("Error happened in method: [ {} ]", joinPoint.getSignature());
+//        log.error("Parameters: {}", Arrays.toString(joinPoint.getArgs()));
+//        log.error("Exception StackTrace: {}", e);
+//    }
 }

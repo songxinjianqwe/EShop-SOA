@@ -2,12 +2,13 @@ package cn.sinjinsong.eshop.common.base.exception.domain;
 
 import org.springframework.http.HttpStatus;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * 所有异常都将返回该错误对象
  */
-public class RestError {
+public class RestError implements Serializable{
 	private HttpStatus status;
 	private int code;
 	private List<RestFieldError> fieldErrors;

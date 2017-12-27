@@ -27,7 +27,10 @@
     </settings>
 
     <typeHandlers>
-       <typeHandler handler="cn.sinjinsong.eshop.common.enumeration.conversion.OrderStatusTypeHandler"
+        <typeHandler handler="cn.sinjinsong.eshop.common.enumeration.conversion.OrderStatusTypeHandler"
                      javaType="cn.sinjinsong.eshop.common.enumeration.order.OrderStatus"></typeHandler>
+        <typeHandler handler="cn.sinjinsong.eshop.common.enumeration.conversion.MessageStatusTypeHandler"
+                     javaType="cn.sinjinsong.eshop.common.enumeration.message.MessageStatus"></typeHandler>
+        
     </typeHandlers>
 </configuration>

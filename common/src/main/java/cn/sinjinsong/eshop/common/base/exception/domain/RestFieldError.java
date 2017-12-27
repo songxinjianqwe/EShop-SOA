@@ -2,7 +2,9 @@ package cn.sinjinsong.eshop.common.base.exception.domain;
 
 import org.springframework.validation.FieldError;
 
-public class RestFieldError {
+import java.io.Serializable;
+
+public class RestFieldError implements Serializable{
 	private String field;
 	private Object rejectedValue;
 	private String message;

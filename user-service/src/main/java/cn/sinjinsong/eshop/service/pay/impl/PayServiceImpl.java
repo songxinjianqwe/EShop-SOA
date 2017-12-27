@@ -1,8 +1,8 @@
 package cn.sinjinsong.eshop.service.pay.impl;
 
 import cn.sinjinsong.eshop.common.domain.entity.pay.BalanceDO;
-import cn.sinjinsong.eshop.common.exception.pay.BalanceNotEnoughException;
-import cn.sinjinsong.eshop.common.exception.pay.PaymentPasswordInCorrectException;
+import cn.sinjinsong.eshop.exception.pay.BalanceNotEnoughException;
+import cn.sinjinsong.eshop.exception.pay.PaymentPasswordInCorrectException;
 import cn.sinjinsong.eshop.dao.pay.BalanceDOMapper;
 import cn.sinjinsong.eshop.service.pay.PayService;
 import lombok.extern.slf4j.Slf4j;
@@ -53,6 +53,8 @@ public class PayServiceImpl implements PayService {
             log.info("{} 用户余额不足", userId);
             throw new BalanceNotEnoughException(String.valueOf(balanceDO.getBalance()));
         }
+        log.info("paymentPassword:{}",paymentPassword);
+        log.info("{} matches passwordEncoder.matches(paymentPassword, balanceDO.getPaymentPassword())",paymentPassword,passwordEncoder.matches(paymentPassword, balanceDO.getPaymentPassword()));
         if (!passwordEncoder.matches(paymentPassword, balanceDO.getPaymentPassword())) {
             log.info("{} 用户支付密码错误", userId);
             throw new PaymentPasswordInCorrectException(userId);

@@ -4,7 +4,6 @@ import cn.sinjinsong.eshop.common.domain.dto.order.OrderQueryConditionDTO;
 import cn.sinjinsong.eshop.common.domain.entity.order.EnterpriseDO;
 import cn.sinjinsong.eshop.common.domain.entity.order.OrderDO;
 import cn.sinjinsong.eshop.common.enumeration.order.OrderStatus;
-import cn.sinjinsong.eshop.common.properties.DbResult;
 import cn.sinjinsong.eshop.dao.order.OrderDOMapper;
 import cn.sinjinsong.eshop.properties.OrderProperties;
 import cn.sinjinsong.eshop.service.order.EnterpriseService;
@@ -92,13 +91,10 @@ public class OrderServiceImpl implements OrderService {
         // 更新订单状态
         order.setOrderStatus(OrderStatus.PAID);
         this.updateOrder(order);
-        // 向企业用户转行
+        // 向企业用户转账
         EnterpriseDO enterpriseDO = enterpriseService.find();
         enterpriseDO.setBalance(enterpriseDO.getBalance() + order.getTotalPrice());
-        int result = enterpriseService.updateEnterpriseMVCC(enterpriseDO);
-        if (result == DbResult.FAILURE) {
-            log.info("{} 订单confirm出现并发，MVCC更新失败", order.getId());
-        }
+        enterpriseService.update(enterpriseDO);
     }
 
     @Transactional

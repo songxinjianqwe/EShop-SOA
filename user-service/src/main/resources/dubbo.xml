@@ -38,8 +38,8 @@
     <dubbo:service interface="cn.sinjinsong.eshop.service.product.ProductService" version="1.0.0"
                    ref="productService"/>
     <dubbo:service interface="cn.sinjinsong.eshop.service.pay.AccountService" version="1.0.0"
-                   ref="accountService" />
+                   ref="accountService"/>
     
-    <dubbo:reference id="orderService" interface="cn.sinjinsong.eshop.service.order.OrderService"
+    <dubbo:reference id="consumerTransactionMessageService" interface="cn.sinjinsong.eshop.service.message.ConsumerTransactionMessageService"
                      version="1.0.0" check="false"/>
 </beans>

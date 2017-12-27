@@ -69,7 +69,7 @@ public class UserServiceImpl implements UserService {
         roleDOMapper.insertUserRole(userDO.getId(), roleId);
 
         //在Balance表中添加用户
-        balanceDOMapper.insert(new BalanceDO(userDO, 0D, null,0L));
+        balanceDOMapper.insert(new BalanceDO(userDO, 0D, null));
     }
 
     @Override

@@ -15,7 +15,7 @@ import org.springframework.context.annotation.ImportResource;
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
 @EnableConfigurationProperties
 @ComponentScan({"cn.sinjinsong"})
-@ImportResource({"classpath:dubbo.xml","classpath:bytetcc-supports-dubbo.xml"})
+@ImportResource({"classpath:dubbo.xml"})
 @Slf4j
 public class WebApplication extends SpringBootServletInitializer {
 
