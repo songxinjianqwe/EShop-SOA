@@ -1,7 +1,9 @@
 package cn.sinjinsong.eshop.dao.message;
 
+import cn.sinjinsong.eshop.common.domain.dto.message.MessageQueryConditionDTO;
 import cn.sinjinsong.eshop.common.domain.entity.message.ProducerTransactionMessageDO;
 import cn.sinjinsong.eshop.common.enumeration.message.MessageStatus;
+import com.github.pagehelper.Page;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -36,4 +38,5 @@ public interface ProductTransactionMessageDOMapper {
     int deleteByPrimaryKey(Long id);
     List<Long> findMessageIdsByStatusCreatedAfter(@Param("statuses") List<MessageStatus> statuses,@Param("gap") Integer minute);
     List<ProducerTransactionMessageDO> selectBatchByPrimaryKeys(@Param("ids") List<Long> ids);
+    Page<ProducerTransactionMessageDO> findByCondition(@Param("condition")MessageQueryConditionDTO dto, Integer pageNum, Integer pageSize);
 }

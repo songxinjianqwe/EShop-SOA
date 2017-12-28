@@ -11,7 +11,7 @@ import java.util.Map;
  */
 @Getter
 public enum MessageStatus {
-    UNCONSUMED(0, "未被消费"), CONSUMED(1, "已被消费"), OVER_CONFIRM_RETRY_TIME(2, "超过确认消息重试次数"),OVER_CONSUME_RETRY_TIME(3,"超过消费消息重试次数"),CONSUME_FAILED(4,"消费失败");
+    UNCONSUMED(0, "未被消费"), CONSUMED(1, "已被消费"), OVER_CONFIRM_RETRY_TIME(2, "超过确认消息重试次数"),OVER_CONSUME_RETRY_TIME(3,"超过消费消息重试次数"),CONSUME_FAILED(4,"消费失败"),ROLLBACK(5,"已被回滚");
     private int code;
     private String desc;
     

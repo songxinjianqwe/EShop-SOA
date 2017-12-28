@@ -41,7 +41,7 @@ public class PayServiceImpl implements PayService {
         balanceDO.setPaymentPassword(passwordEncoder.encode(newPaymentPassword));
         balanceDOMapper.updateByPrimaryKeySelective(balanceDO);
     }
-    
+
     @Transactional
     @Override
     public void decreaseAccount(Long userId, Double totalPrice, String paymentPassword) {
@@ -53,14 +53,22 @@ public class PayServiceImpl implements PayService {
             log.info("{} 用户余额不足", userId);
             throw new BalanceNotEnoughException(String.valueOf(balanceDO.getBalance()));
         }
-        log.info("paymentPassword:{}",paymentPassword);
-        log.info("{} matches passwordEncoder.matches(paymentPassword, balanceDO.getPaymentPassword())",paymentPassword,passwordEncoder.matches(paymentPassword, balanceDO.getPaymentPassword()));
+        log.info("paymentPassword:{}", paymentPassword);
+        log.info("{} matches passwordEncoder.matches(paymentPassword, balanceDO.getPaymentPassword())", paymentPassword, passwordEncoder.matches(paymentPassword, balanceDO.getPaymentPassword()));
         if (!passwordEncoder.matches(paymentPassword, balanceDO.getPaymentPassword())) {
             log.info("{} 用户支付密码错误", userId);
             throw new PaymentPasswordInCorrectException(userId);
         }
         balanceDO.setBalance(balanceDO.getBalance() - totalPrice);
         // 本地事务
+        balanceDOMapper.updateByPrimaryKeySelective(balanceDO);
+    }
+
+    @Transactional
+    @Override
+    public void increaseAccount(Long userId, Double totalPrice) {
+        BalanceDO balanceDO = balanceDOMapper.selectByPrimaryKey(userId);
+        balanceDO.setBalance(balanceDO.getBalance() + totalPrice);
         balanceDOMapper.updateByPrimaryKeySelective(balanceDO);
     }
 }

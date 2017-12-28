@@ -45,7 +45,7 @@ public class AccountMessageListener implements MessageListenerConcurrently {
                 String keys = msg.getKeys();
                 order = ProtoStuffUtil.deserialize(msg.getBody(), OrderDO.class);
                 log.info("消费者接收到消息:topic: {}, keys:{} , order: {}", topic, keys, order);
-                // 如果已经被消费过并且消费成功，那么不再重复消费
+                // 如果已经被消费过并且消费成功，那么不再重复消费（未被消费->id不存在或消费失败或超过重试次数的都会继续消费）
                 if(messageService.isMessageConsumedSuccessfully(order.getId())){
                     continue;
                 }
@@ -58,7 +58,9 @@ public class AccountMessageListener implements MessageListenerConcurrently {
                 orderService.finishOrder(order);
                 // 如果业务逻辑抛出异常，那么会跳过插入CONSUMED
                 messageDO.setMessageStatus(MessageStatus.CONSUMED);
-                messageService.insert(messageDO);
+                // 如果是未被消费，第一次就消费成功了，则插入
+                // 如果是超过重试次数，又人工设置重试，则更新状态为已被消费
+                messageService.insertOrUpdate(messageDO);
             } catch (Exception e) {
                 e.printStackTrace();
                 // 重试次数达到最大重试次数 
@@ -69,12 +71,14 @@ public class AccountMessageListener implements MessageListenerConcurrently {
                                     .id(order.getId())
                                     .messageStatus(MessageStatus.OVER_CONSUME_RETRY_TIME).build()
                     );
-                    //记录日志
                     return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                 } else {
                     log.info("消费失败，进行重试，当前重试次数为: {}", msg.getReconsumeTimes());
                     messageDO.setMessageStatus(MessageStatus.CONSUME_FAILED);
-                    messageService.insertIfNotExists(messageDO);
+                    // 如果第一次消费失败，那么插入
+                    // 如果之前消费失败，继续重试，那么doNothing
+                    // 如果之前是超过重试次数，人工设置重试，那么将状态改为消费失败
+                    messageService.insertOrUpdate(messageDO);
                     return ConsumeConcurrentlyStatus.RECONSUME_LATER;
                 }
             }

@@ -1,17 +1,18 @@
 package cn.sinjinsong.eshop.service.message.impl;
 
+import cn.sinjinsong.eshop.common.domain.dto.message.MessageQueryConditionDTO;
 import cn.sinjinsong.eshop.common.domain.entity.message.ProducerTransactionMessageDO;
 import cn.sinjinsong.eshop.common.enumeration.message.MessageStatus;
-import cn.sinjinsong.eshop.dao.message.ProductTransactionMessageDOMapper;
 import cn.sinjinsong.eshop.config.MQProducerConfig;
+import cn.sinjinsong.eshop.dao.message.ProductTransactionMessageDOMapper;
 import cn.sinjinsong.eshop.service.message.ConsumerTransactionMessageService;
 import cn.sinjinsong.eshop.service.message.ProducerTransactionMessageService;
 import com.alibaba.rocketmq.client.producer.MQProducer;
 import com.alibaba.rocketmq.client.producer.SendResult;
 import com.alibaba.rocketmq.common.message.Message;
+import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -23,7 +24,6 @@ import java.util.Map;
  * @author sinjinsong
  * @date 2017/12/26
  */
-@Service
 @Slf4j
 public class ProducerTransactionMessageServiceImpl implements ProducerTransactionMessageService {
     @Autowired
@@ -53,7 +53,7 @@ public class ProducerTransactionMessageServiceImpl implements ProducerTransactio
         // 此时all为确认消息发送失败的
         this.reSend(mapper.selectBatchByPrimaryKeys(all));
     }
-    
+
     @Transactional
     @Override
     public void reSend(List<ProducerTransactionMessageDO> messages) {
@@ -85,4 +85,22 @@ public class ProducerTransactionMessageServiceImpl implements ProducerTransactio
     public void delete(Long id) {
         mapper.deleteByPrimaryKey(id);
     }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<ProducerTransactionMessageDO> findByIds(List<Long> ids) {
+        return mapper.selectBatchByPrimaryKeys(ids);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public PageInfo<ProducerTransactionMessageDO> findByQueryDTO(MessageQueryConditionDTO dto) {
+        return mapper.findByCondition(dto, dto.getPageNum(), dto.getPageSize()).toPageInfo();
+    }
+
+    @Override
+    public void update(ProducerTransactionMessageDO message) {
+        mapper.updateByPrimaryKeySelective(message);
+    }
+
 }

@@ -3,17 +3,14 @@
 <mapper namespace="cn.sinjinsong.eshop.dao.message.ProductTransactionMessageDOMapper">
 
     <resultMap id="BaseResultMap" type="cn.sinjinsong.eshop.common.domain.entity.message.ProducerTransactionMessageDO">
-        <constructor>
-            <idArg column="msgId" javaType="java.lang.Long" jdbcType="BIGINT"/>
-            <arg column="message_status" javaType="cn.sinjinsong.eshop.common.enumeration.message.MessageStatus"
-                 jdbcType="SMALLINT"/>
-            <arg column="update_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
-            <arg column="create_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
-            <arg column="send_times" javaType="java.lang.Integer" jdbcType="INTEGER"/>
-            <arg column="topic" javaType="java.lang.String" jdbcType="VARCHAR"/>
-        </constructor>
+        <id column="msgId" property="id" ></id>
+        <result column="message_status" property="messageStatus" javaType="cn.sinjinsong.eshop.common.enumeration.message.MessageStatus"></result>
+        <result column="update_time" property="updateTime" javaType="java.time.LocalDateTime"></result>
+        <result column="create_time" property="createTime" javaType="java.time.LocalDateTime"></result>
+        <result column="send_times" property="sendTimes"></result>
+        <result column="topic" property="topic"></result>
     </resultMap>
-
+    
     <resultMap id="ResultMapWithBLOBs"
                type="cn.sinjinsong.eshop.common.domain.entity.message.ProducerTransactionMessageDO">
         <constructor>
@@ -133,4 +130,25 @@
         </if>
         <if test="ids == null or ids.size == 0">1=0</if>
     </select>
+
+    
+    <select id="findByCondition" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from producer_transaction_message
+        <where>
+            <if test="condition.id != null">
+                msgId = #{condition.id}
+            </if>
+            <if test="condition.status != null">
+                and message_status = #{condition.status.code} 
+            </if>
+            <if test="condition.topic != null">
+                and topic = #{condition.topic} 
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+    
+    
 </mapper>

@@ -14,6 +14,7 @@ public interface ConsumerTransactionMessageService {
     Map<Long,MessageStatus>  findConsumerMessageStatuses(List<Long> ids);
     ConsumerTransactionMessageDO selectByPrimaryKey(Long id);
     void insert(ConsumerTransactionMessageDO record);
+    void insertOrUpdate(ConsumerTransactionMessageDO record);
     void insertIfNotExists(ConsumerTransactionMessageDO record);
     void update(ConsumerTransactionMessageDO record);
     boolean isMessageConsumedSuccessfully(Long id);

@@ -8,9 +8,9 @@
         http://code.alibabatech.com/schema/dubbo/dubbo.xsd  
         ">
 
-    <bean id="orderService "
+    <bean id="orderService"
           class="cn.sinjinsong.eshop.service.order.impl.OrderServiceImpl"/>
-    <bean id="consumerTransactionMessageService "
+    <bean id="consumerTransactionMessageService"
           class="cn.sinjinsong.eshop.service.message.impl.ConsumerTransactionMessageServiceImpl"/>
     
     <!-- 消费者应用信息，用于提供依赖关系 -->

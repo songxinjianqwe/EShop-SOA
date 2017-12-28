@@ -19,7 +19,9 @@
           class="cn.sinjinsong.eshop.service.product.impl.ProductServiceImpl"/>
     <bean id="accountService"
           class="cn.sinjinsong.eshop.service.pay.impl.AccountServiceImpl"/>
-
+    <bean id="producerTransactionMessageService"
+          class="cn.sinjinsong.eshop.service.message.impl.ProducerTransactionMessageServiceImpl"/>
+    
     <!-- 提供方应用信息，用于计算依赖关系 -->
     <dubbo:application name="user_provider"/>
     <!-- 使用zookeeper注册中心暴露服务地址 -->
@@ -39,7 +41,8 @@
                    ref="productService"/>
     <dubbo:service interface="cn.sinjinsong.eshop.service.pay.AccountService" version="1.0.0"
                    ref="accountService"/>
-    
+    <dubbo:service interface="cn.sinjinsong.eshop.service.message.ProducerTransactionMessageService" version="1.0.0"
+                   ref="producerTransactionMessageService"/>
     <dubbo:reference id="consumerTransactionMessageService" interface="cn.sinjinsong.eshop.service.message.ConsumerTransactionMessageService"
                      version="1.0.0" check="false"/>
 </beans>

@@ -1,6 +1,8 @@
 package cn.sinjinsong.eshop.service.message;
 
+import cn.sinjinsong.eshop.common.domain.dto.message.MessageQueryConditionDTO;
 import cn.sinjinsong.eshop.common.domain.entity.message.ProducerTransactionMessageDO;
+import com.github.pagehelper.PageInfo;
 
 import java.util.List;
 
@@ -13,4 +15,7 @@ public interface ProducerTransactionMessageService {
     void check();
     void reSend(List<ProducerTransactionMessageDO> messages) ;
     void delete(Long id);
+    List<ProducerTransactionMessageDO> findByIds(List<Long> ids);
+    PageInfo<ProducerTransactionMessageDO> findByQueryDTO(MessageQueryConditionDTO dto);
+    void update(ProducerTransactionMessageDO message);
 }

@@ -27,7 +27,7 @@ import javax.validation.Valid;
  * Created by SinjinSong on 2017/10/7.
  */
 @RestController
-@Api(value = "pay", description = "支付相关")
+@Api(value = "commit", description = "支付相关")
 @Slf4j
 public class PayController {
     @Autowired
@@ -62,7 +62,7 @@ public class PayController {
         if (!user.getId().equals(order.getUser().getId())) {
             throw new AccessDeniedException(user.getUsername());
         }
-        accountService.pay(order, paymentPassword.getPaymentPassword());
+        accountService.commit(order, paymentPassword.getPaymentPassword());
     }
 
     @RequestMapping(value = "/users/{userId}/payment_password", method = RequestMethod.POST)

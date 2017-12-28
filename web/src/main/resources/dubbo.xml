@@ -21,4 +21,5 @@
     <dubbo:reference id="payService" interface="cn.sinjinsong.eshop.service.pay.PayService" version="1.0.0"/>
     <dubbo:reference id="productService" interface="cn.sinjinsong.eshop.service.product.ProductService" version="1.0.0"/>
     <dubbo:reference id="accountService" interface="cn.sinjinsong.eshop.service.pay.AccountService" version="1.0.0"/>
+    <dubbo:reference id="producerTransactionMessageService" interface="cn.sinjinsong.eshop.service.message.ProducerTransactionMessageService" version="1.0.0" />
 </beans>
