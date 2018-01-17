@@ -1,4 +1,5 @@
 # SOA EShop 
+介绍请参见http://blog.csdn.net/songxinjianqwe/article/details/78923482
 ## Dubbo + TCC 分布式事务
 
 ## 业务拆分
