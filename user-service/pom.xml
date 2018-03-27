@@ -23,18 +23,13 @@
         </dependency>
         <dependency>
             <groupId>cn.sinjinsong</groupId>
-            <artifactId>order-api</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>cn.sinjinsong</groupId>
             <artifactId>email-api</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
 
     <build>
-        <finalName>Order-Service</finalName>
+        <finalName>User-Service</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

@@ -21,11 +21,16 @@ spring:
       - 192.168.1.109:6379
       - 192.168.1.110:6379
   rocketmq:
-    namesrv-addr: 192.168.1.113:9876;192.168.1.114:9876
-    group-name: account-consumer
-    topic: account
-    consume-failure-retry-times: 3
-
+    consumer: 
+      namesrv-addr: 192.168.1.113:9876;192.168.1.114:9876
+      group-name: account-consumer
+      topic: account
+      check-keys: check
+      consume-failure-retry-times: 3
+    producer:
+      namesrv-addr: 192.168.1.113:9876;192.168.1.114:9876
+      group-name: account-transaction-message-producer
+      topic: account-check
 #多数据源 1主2从
 datasource:
  #从库数量

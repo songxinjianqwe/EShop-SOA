@@ -25,9 +25,7 @@ public class ConsumerTransactionMessageServiceImpl implements ConsumerTransactio
         Map<Long, MessageStatus> result = new HashMap<>();
         for (Long id : ids) {
             MessageStatus status = mapper.findStatusById(id);
-            if (status != null) {
-                result.put(id, status);
-            }
+            result.put(id, status);
         }
         return result;
     }

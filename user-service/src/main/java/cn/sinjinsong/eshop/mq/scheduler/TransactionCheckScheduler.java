@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 public class TransactionCheckScheduler {
     @Autowired
     private ProducerTransactionMessageService messageService;
-
+    
     /**
      * 每分钟执行一次事务回查
      */

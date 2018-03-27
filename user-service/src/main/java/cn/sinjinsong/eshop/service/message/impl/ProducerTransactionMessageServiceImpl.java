@@ -3,9 +3,9 @@ package cn.sinjinsong.eshop.service.message.impl;
 import cn.sinjinsong.eshop.common.domain.dto.message.MessageQueryConditionDTO;
 import cn.sinjinsong.eshop.common.domain.entity.message.ProducerTransactionMessageDO;
 import cn.sinjinsong.eshop.common.enumeration.message.MessageStatus;
+import cn.sinjinsong.eshop.common.util.ProtoStuffUtil;
 import cn.sinjinsong.eshop.config.MQProducerConfig;
 import cn.sinjinsong.eshop.dao.message.ProductTransactionMessageDOMapper;
-import cn.sinjinsong.eshop.service.message.ConsumerTransactionMessageService;
 import cn.sinjinsong.eshop.service.message.ProducerTransactionMessageService;
 import com.alibaba.rocketmq.client.producer.MQProducer;
 import com.alibaba.rocketmq.client.producer.SendResult;
@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -32,9 +33,7 @@ public class ProducerTransactionMessageServiceImpl implements ProducerTransactio
     private MQProducerConfig config;
     @Autowired
     private ProductTransactionMessageDOMapper mapper;
-    @Autowired
-    private ConsumerTransactionMessageService consumerTransactionMessageService;
-
+    
     @Transactional
     @Override
     public void save(ProducerTransactionMessageDO message) {
@@ -45,13 +44,31 @@ public class ProducerTransactionMessageServiceImpl implements ProducerTransactio
     @Override
     public void check() {
         List<Long> all = mapper.findMessageIdsByStatusCreatedAfter(Arrays.asList(MessageStatus.UNCONSUMED, MessageStatus.CONSUME_FAILED), MQProducerConfig.CHECK_GAP);
-        Map<Long, MessageStatus> statusMap = consumerTransactionMessageService.findConsumerMessageStatuses(all);
-        for (Map.Entry<Long, MessageStatus> entry : statusMap.entrySet()) {
-            mapper.updateByPrimaryKeySelective(ProducerTransactionMessageDO.builder().id(entry.getKey()).messageStatus(entry.getValue()).updateTime(LocalDateTime.now()).build());
+        Message checkMessage = new Message();
+        checkMessage.setTopic(config.getTopic());
+        checkMessage.setTags(config.getCheckKeys());
+        checkMessage.setBody(ProtoStuffUtil.serialize(all));
+        try {
+            producer.send(checkMessage);
+        } catch (Exception e) {
+            log.info("发送check消息失败，暂不做处理，不会影响数据一致性");
+            e.printStackTrace();
         }
-        all.removeAll(statusMap.keySet());
-        // 此时all为确认消息发送失败的
-        this.reSend(mapper.selectBatchByPrimaryKeys(all));
+    }
+
+    @Transactional
+    @Override
+    public void updateStatusAndReSend(Map<Long, MessageStatus> statusMap) {
+        List<Long> confirmMessageFailedIds = new ArrayList<>();
+        for (Map.Entry<Long, MessageStatus> entry : statusMap.entrySet()) {
+            if(entry.getValue() == null) {
+                confirmMessageFailedIds.add(entry.getKey());                
+            }else {
+                mapper.updateByPrimaryKeySelective(ProducerTransactionMessageDO.builder().id(entry.getKey()).messageStatus(entry.getValue()).updateTime(LocalDateTime.now()).build());
+            }
+        }
+        // 此时confirmMessageFailedIds为确认消息发送失败的
+        this.reSend(mapper.selectBatchByPrimaryKeys(confirmMessageFailedIds));
     }
 
     @Transactional

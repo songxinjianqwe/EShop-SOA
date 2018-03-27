@@ -22,16 +22,18 @@ import javax.annotation.PostConstruct;
 public class MQConsumerConfig {
     private DefaultMQPushConsumer consumer;
     
-    @Value("${spring.rocketmq.group-name}")
+    @Value("${spring.rocketmq.consumer.group-name}")
     private String groupName;
-    @Value("${spring.rocketmq.namesrv-addr}")
+    @Value("${spring.rocketmq.consumer.namesrv-addr}")
     private String namesrvAddr;
-    @Value("${spring.rocketmq.topic}")
+    @Value("${spring.rocketmq.consumer.topic}")
     private String topic;
     @Autowired
     private AccountMessageListener accountMessageListener;
-    @Value("${spring.rocketmq.consume-failure-retry-times}")
+    @Value("${spring.rocketmq.consumer.consume-failure-retry-times}")
     private Integer retryTimes;
+    @Value("${spring.rocketmq.consumer.check-keys}")
+    private String checkKeys;
     
     @PostConstruct
     public void init() throws MQClientException {

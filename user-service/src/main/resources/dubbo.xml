@@ -43,6 +43,4 @@
                    ref="accountService"/>
     <dubbo:service interface="cn.sinjinsong.eshop.service.message.ProducerTransactionMessageService" version="1.0.0"
                    ref="producerTransactionMessageService"/>
-    <dubbo:reference id="consumerTransactionMessageService" interface="cn.sinjinsong.eshop.service.message.ConsumerTransactionMessageService"
-                     version="1.0.0" check="false"/>
 </beans>

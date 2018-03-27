@@ -20,15 +20,17 @@ import org.springframework.context.annotation.Configuration;
 @Slf4j
 @Getter
 public class MQProducerConfig {
-    @Value("${spring.rocketmq.group-name}")
+    @Value("${spring.rocketmq.producer.group-name}")
     private String groupName;
-    @Value("${spring.rocketmq.namesrv-addr}")
+    @Value("${spring.rocketmq.producer.namesrv-addr}")
     private String namesrvAddr;
-    @Value("${spring.rocketmq.topic}")
+    @Value("${spring.rocketmq.producer.topic}")
     private String topic;
-    @Value("${spring.rocketmq.confirm-message-faiure-retry-times}")  
+    @Value("${spring.rocketmq.producer.confirm-message-faiure-retry-times}")  
     private Integer retryTimes;
     public static final Integer CHECK_GAP = 1; 
+    @Value("${spring.rocketmq.producer.check-keys}")
+    private String checkKeys;
     
     @Bean
     public MQProducer mqProducer() throws MQClientException {
@@ -50,5 +52,4 @@ public class MQProducerConfig {
         log.info("producer started!");
         return producer;
     }
-    
 }

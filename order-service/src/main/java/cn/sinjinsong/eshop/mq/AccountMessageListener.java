@@ -5,11 +5,14 @@ import cn.sinjinsong.eshop.common.domain.entity.order.OrderDO;
 import cn.sinjinsong.eshop.common.enumeration.message.MessageStatus;
 import cn.sinjinsong.eshop.common.util.ProtoStuffUtil;
 import cn.sinjinsong.eshop.config.MQConsumerConfig;
+import cn.sinjinsong.eshop.config.MQProducerConfig;
 import cn.sinjinsong.eshop.service.message.ConsumerTransactionMessageService;
 import cn.sinjinsong.eshop.service.order.OrderService;
 import com.alibaba.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
 import com.alibaba.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
 import com.alibaba.rocketmq.client.consumer.listener.MessageListenerConcurrently;
+import com.alibaba.rocketmq.client.producer.MQProducer;
+import com.alibaba.rocketmq.common.message.Message;
 import com.alibaba.rocketmq.common.message.MessageExt;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +21,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author sinjinsong
@@ -32,8 +36,12 @@ public class AccountMessageListener implements MessageListenerConcurrently {
     @Qualifier("consumerTransactionMessageService")
     private ConsumerTransactionMessageService messageService;
     @Autowired
-    private MQConsumerConfig config;
-
+    private MQConsumerConfig consumerConfig;
+    @Autowired
+    private MQProducerConfig producerConfig;
+    @Autowired
+    private MQProducer producer;
+    
     @Override
     public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
         log.info("接收到消息数量为:{}", msgs.size());
@@ -43,10 +51,26 @@ public class AccountMessageListener implements MessageListenerConcurrently {
             try {
                 String topic = msg.getTopic();
                 String keys = msg.getKeys();
+
+                // 如果是回查消息
+                if (keys.equals(consumerConfig.getCheckKeys())) {
+                    List<Long> ids = ProtoStuffUtil.deserialize(msg.getBody(),List.class);
+                    log.info("消费者接收到回查消息:topic: {}, keys:{} ,body: {}", topic, keys,ids);
+                    Map<Long, MessageStatus> result = messageService.findConsumerMessageStatuses(ids);
+                    Message checkReply = new Message();
+                    checkReply.setTopic(producerConfig.getTopic());
+                    checkReply.setBody(ProtoStuffUtil.serialize(result));
+                    producer.send(checkReply);
+                    continue;
+                }
+
+
                 order = ProtoStuffUtil.deserialize(msg.getBody(), OrderDO.class);
                 log.info("消费者接收到消息:topic: {}, keys:{} , order: {}", topic, keys, order);
+
+
                 // 如果已经被消费过并且消费成功，那么不再重复消费（未被消费->id不存在或消费失败或超过重试次数的都会继续消费）
-                if(messageService.isMessageConsumedSuccessfully(order.getId())){
+                if (messageService.isMessageConsumedSuccessfully(order.getId())) {
                     continue;
                 }
                 messageDO = ConsumerTransactionMessageDO.builder()
@@ -64,7 +88,7 @@ public class AccountMessageListener implements MessageListenerConcurrently {
             } catch (Exception e) {
                 e.printStackTrace();
                 // 重试次数达到最大重试次数 
-                if (msg.getReconsumeTimes() == config.getRetryTimes()) {
+                if (msg.getReconsumeTimes() == consumerConfig.getRetryTimes()) {
                     log.info("客户端重试三次,需要人工处理");
                     messageService.update(
                             ConsumerTransactionMessageDO.builder()
